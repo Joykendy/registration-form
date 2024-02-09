@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: maroon;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .registration-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center; /* Center the logo */
+            height: 550px;
+            width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="tel"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            background-color: green;
+            color: white;
+            padding: 10px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px; /* Adjust the font size */
+        }
+
+        button:hover {
+            background-color: darkred; /* Change the color on hover if desired */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <img src="\equity logo.png" alt="Logo" style="width: 100px; height: 100px; margin-bottom: 20px;">
+        <h2>Registration form</h2>
+        <form id="registration-form" method="post" action="#">
+            <div>
+                <input type="text" id="username" placeholder="Name" name="name">
+            </div>
+            <div>
+                <input type="tel" id="phone" placeholder="Phone Number" name="phone" max="10">
+            </div>
+            <div>
+                <input type="email" id="email" placeholder="Email" name="email">
+            </div>
+            <div>
+                <input type="password" id="password" placeholder="Password" name="password" max="10">
+            </div>
+            <p id="response"></p>
+            <button " type="submit">Register</button>
+            
+        </form>
+        <div class="error-message" id="error-message"></div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(document).on('submit', '#registration-form', function(e){
+                e.preventDefault();
+                let inputs = $(this).find('input');
+                $('span').remove();
+
+                $.each(inputs, function(){
+                    let input = $(this);
+                    if (input.val() === '') {
+                        input.parent().append("<span style='color: red'>This field is required</span>");
+                    } else {
+                        input.parent().remove("span");
+                    }
+                });
+
+                let spansLength = $(this).find('span').length;
+                if (spansLength === 0) {
+                    let url = 'https://client.mopo.co.ke/setlinks/api/v1/auth/register';
+                    $.ajax({
+                        url: url,
+                        method: 'post',
+                        async: true,
+                        data: $(this).serialize(),
+                        success: function(response){
+                
+                            $('#response').html(response);
+                           /* alert(response[0]); // Adjust based on the actual response structure*/
+                        },
+                        error: function(error){
+                            console.error('Error during login:', error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
